@@ -5,7 +5,6 @@ import vis.SimVis;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 // Handles incoming connections
@@ -14,10 +13,10 @@ public class ConnectionListener extends Thread {
     ServerSocket serverSocket;
     Connection connection;
     SimVis simVis;
+    private JSONProducer gameStateJSONReader;
 
-    public ConnectionListener(SimVis simVis,Connection connection, ServerSocket serverSocket) {
+    public ConnectionListener(SimVis simVis, ServerSocket serverSocket) {
         this.simVis = simVis;
-        this.connection = connection;
         this.serverSocket = serverSocket;
     }
 
@@ -27,6 +26,8 @@ public class ConnectionListener extends Thread {
             try {
                 System.out.println("Listening for new connection.");
                 connection = new Connection(serverSocket.accept());
+                gameStateJSONReader = new JSONProducer(simVis);
+                gameStateJSONReader.start();
                 System.out.println("New connection established.\n Connection: " + connection);
             }catch (SocketException e) {
                 System.out.println("Shutting down ConnectionListener.");

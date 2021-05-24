@@ -2,12 +2,7 @@ package io;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import vis.GameState;
 import vis.SimVis;
-
-import java.net.Socket;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class JSONConsumer extends Thread {
 
@@ -20,8 +15,9 @@ public class JSONConsumer extends Thread {
     @Override
     public void run() {
         String JSON = simVis.getIncomingJSON().poll();
-        GameState newGameState = new Gson().fromJson(JSON, new TypeToken<GameState>() {}.getType());
-        simVis.getGameStateQueue().add(newGameState);
+        vis.State newState = new Gson().fromJson(JSON, new TypeToken<vis.State>() {}.getType());
+        System.out.println(newState.toString());
+        simVis.getStateQueue().add(newState);
         System.out.println("Added new GameState to Queue.");
     }
 }

@@ -1,37 +1,49 @@
 package vis;
 
-import io.Connection;
 import io.ConnectionListener;
+import io.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import processing.core.PApplet;
+import processing.core.PImage;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.*;
 
-@EqualsAndHashCode(callSuper = false)
+
 @Data
 public class SimVis extends PApplet {
 
-    int X = 20;
-    int Y = 20;
+    public PImage plainImage;
+    public PImage obstacleImage;
+    public PImage deerImage;
+    public PImage wolfImage;
+    public PImage highGrassImage;
+
+    public ConnectionListener connectionListener;
+    public ServerSocket serverSocket;
+    public JSONProducer JSONProducer;
+    {
+        try {
+            serverSocket = new ServerSocket(5550);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    int X = 10;
+    int Y = 10;
     int squareSize = 50;
     int background_color = 255;
 
-    ConnectionListener connectionListener;
+    // TODO:: replace
+    Random rng = new Random();
+
     // storage for incoming JSON strings
     private Queue<String> incomingJSON = new LinkedList<>();
-    private Queue<GameState> gameStateQueue = new LinkedList<>();
+    private Queue<State> stateQueue = new LinkedList<>();
     private List<Cell> cells = new ArrayList<>();
-
-
-
-
-
-
 
 
     public static void main(String... args){
@@ -41,13 +53,29 @@ public class SimVis extends PApplet {
 
     @Override
     public void setup() {
+
+
+
+        plainImage = this.loadImage("src/main/resources/plain-tex.jpg");
+        obstacleImage = this.loadImage("src/main/resources/stone-tex.jpg");
+        deerImage = this.loadImage("src/main/resources/deer.jpg");
+        wolfImage = this.loadImage("src/main/resources/wolf.png");
+        highGrassImage = this.loadImage("src/main/resources/grass.jpg");
+
+        connectionListener = new ConnectionListener(this, serverSocket);
+        connectionListener.start();
+
+
         // add "blank" game state
-        gameStateQueue.add(new GameState(X, Y, new int[X * Y]));
+        stateQueue.add(new State(new int[X * Y]));
 
         // init cells
         for (int j = 0; j < Y; j++) {
             for (int i = 0; i < X; i++) {
-                cells.add(new Cell(this, i, j, squareSize));
+                Cell cell = new Cell(this, i, j, squareSize);
+                cell.updateCellState(rng.nextInt(9));
+                cells.add(cell);
+
             }
         }
 
@@ -62,24 +90,30 @@ public class SimVis extends PApplet {
 
     @SneakyThrows
     public void draw(){
-        background(255);
 
-        while (gameStateQueue.isEmpty()) {
-            System.out.println("Waiting for new GameState.");
+        while (stateQueue.isEmpty()) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        background(255);
+        State state = stateQueue.poll();
+
+        System.out.println("StateCount: " + state.getState().length);
+
+
+        for (int i = 0; i < cells.size(); i++) {
+            Cell currentCell = cells.get(i);
+            currentCell.updateCellState(state.getState()[i]);
+
         }
 
         for (Cell cell : cells) {
             cell.show();
         }
 
-
     }
-
-
-
 }

@@ -1,8 +1,10 @@
 package io;
 
+import org.apache.commons.io.IOUtils;
 import vis.SimVis;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.SocketTimeoutException;
 import java.util.Queue;
 
@@ -30,8 +32,8 @@ public class JSONProducer extends Thread {
                 new JSONConsumer(simVis).start();
             }
             catch (SocketTimeoutException ignored) {}
-            catch (IOException | NullPointerException e) {
-                System.out.println(ANSI_RED_BACKGROUND + "Connection: " + connection + " is not available." + ANSI_RESET);
+            catch (IOException | NullPointerException ignore) {
+                //System.out.println(ANSI_RED_BACKGROUND + "Connection: " + connection + " is not available." + ANSI_RESET);
             }
         }
     }
