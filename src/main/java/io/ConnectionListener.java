@@ -13,7 +13,6 @@ public class ConnectionListener extends Thread {
     ServerSocket serverSocket;
     Connection connection;
     SimVis simVis;
-    private JSONProducer gameStateJSONReader;
 
     public ConnectionListener(SimVis simVis, ServerSocket serverSocket) {
         this.simVis = simVis;
@@ -26,7 +25,7 @@ public class ConnectionListener extends Thread {
             try {
                 System.out.println("Listening for new connection.");
                 connection = new Connection(serverSocket.accept());
-                gameStateJSONReader = new JSONProducer(simVis);
+                JSONConverter gameStateJSONReader = new JSONConverter(simVis);
                 gameStateJSONReader.start();
                 System.out.println("New connection established.\n Connection: " + connection);
             }catch (SocketException e) {

@@ -23,7 +23,7 @@ public class SimVis extends PApplet {
 
     public ConnectionListener connectionListener;
     public ServerSocket serverSocket;
-    public JSONProducer JSONProducer;
+    public JSONConverter JSONConverter;
     {
         try {
             serverSocket = new ServerSocket(5550);
@@ -32,8 +32,8 @@ public class SimVis extends PApplet {
         }
     }
 
-    int X = 10;
-    int Y = 10;
+    int X = 40;
+    int Y = 20;
     int squareSize = 50;
     int background_color = 255;
 
@@ -56,10 +56,10 @@ public class SimVis extends PApplet {
 
 
 
-        plainImage = this.loadImage("src/main/resources/plain-tex.jpg");
-        obstacleImage = this.loadImage("src/main/resources/stone-tex.jpg");
+        plainImage = this.loadImage("src/main/resources/plain.jpg");
+        obstacleImage = this.loadImage("src/main/resources/stone.jpg");
         deerImage = this.loadImage("src/main/resources/deer.jpg");
-        wolfImage = this.loadImage("src/main/resources/wolf.png");
+        wolfImage = this.loadImage("src/main/resources/wolf.jpg");
         highGrassImage = this.loadImage("src/main/resources/grass.jpg");
 
         connectionListener = new ConnectionListener(this, serverSocket);
@@ -101,17 +101,20 @@ public class SimVis extends PApplet {
 
         background(255);
         State state = stateQueue.poll();
-
-        System.out.println("StateCount: " + state.getState().length);
-
-
+        List<Cell> predators = new ArrayList<>();
         for (int i = 0; i < cells.size(); i++) {
             Cell currentCell = cells.get(i);
+            int currentCellState = state.getState()[i];
+            if (currentCellState == 4 || currentCellState == 6 || currentCellState == 7 || currentCellState == 8) {
+                predators.add(currentCell);
+            }
             currentCell.updateCellState(state.getState()[i]);
-
         }
-
         for (Cell cell : cells) {
+            if (predators.contains(cell)) continue;
+            cell.show();
+        }
+        for (Cell cell : predators) {
             cell.show();
         }
 

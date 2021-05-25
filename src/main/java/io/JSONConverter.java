@@ -1,25 +1,21 @@
 package io;
 
-import org.apache.commons.io.IOUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import vis.SimVis;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.SocketTimeoutException;
-import java.util.Queue;
 
-import static utils.ThreadColors.*;
 
-public class JSONProducer extends Thread {
+public class JSONConverter extends Thread {
 
     private final SimVis simVis;
     private final Connection connection;
-    private final Queue<String> incomingJSON;
 
-    public JSONProducer(SimVis simVis) {
+    public JSONConverter(SimVis simVis) {
         this.simVis = simVis;
         this.connection = simVis.getConnectionListener().connection;
-        this.incomingJSON = simVis.getIncomingJSON();
     }
 
     @Override
@@ -27,9 +23,9 @@ public class JSONProducer extends Thread {
         while (!isInterrupted()) {
             try {
                 String msg = connection.getReader().readLine();
-                System.out.println("Received new message: " + msg);
-                incomingJSON.add(msg);
-                new JSONConsumer(simVis).start();
+                vis.State newState = new Gson().fromJson(msg, new TypeToken<vis.State>() {}.getType());
+                simVis.getStateQueue().add(newState);
+                System.out.println("Added new GameState to Queue.");
             }
             catch (SocketTimeoutException ignored) {}
             catch (IOException | NullPointerException ignore) {

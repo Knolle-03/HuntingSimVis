@@ -1,8 +1,6 @@
 package vis;
 
-import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.core.PImage;
 
 public class Cell {
 
@@ -102,6 +100,7 @@ public class Cell {
 
     if (hasNothing) {
       sketch.noStroke();
+      sketch.tint(255, 200);
       sketch.image(sketch.plainImage,x + 2, y + 2, size - 4, size - 4);
     }
 
@@ -112,6 +111,9 @@ public class Cell {
 
     if (hasPrey) {
       sketch.noStroke();
+//      sketch.rectMode(PConstants.CENTER);
+//      sketch.fill(0, 0, 255 , 100);
+//      sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
       sketch.image(sketch.deerImage, x + 3, y + 3, size / 2, size / 2);
     }
 
@@ -122,6 +124,9 @@ public class Cell {
 
     if (hasPredator) {
       sketch.noStroke();
+      sketch.rectMode(PConstants.CENTER);
+      sketch.fill(255, 0, 0 , 100);
+      sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
       sketch.image(sketch.wolfImage, x + 2 + (size / 2), y + 3, size / 2, size / 2);
     }
 
