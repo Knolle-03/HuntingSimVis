@@ -25,7 +25,6 @@ public class JSONConverter extends Thread {
                 String msg = connection.getReader().readLine();
                 vis.State newState = new Gson().fromJson(msg, new TypeToken<vis.State>() {}.getType());
                 simVis.getStateQueue().add(newState);
-                System.out.println("Added new GameState to Queue.");
             }
             catch (SocketTimeoutException ignored) {}
             catch (IOException | NullPointerException ignore) {

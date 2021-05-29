@@ -13,7 +13,7 @@ public class Cell {
   int row;
   int size;
 
-  int maxRow = 20;
+  int maxRow = SimVis.Y;
 
 //  PLAIN,                          // 0
 //  OBSTACLE,                       // 1
@@ -110,9 +110,9 @@ public class Cell {
 
     if (hasPrey) {
       sketch.noStroke();
-//      sketch.rectMode(PConstants.CENTER);
-//      sketch.fill(0, 0, 255 , 100);
-//      sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
+      sketch.rectMode(PConstants.CENTER);
+      sketch.fill(0, 0, 255 , 100);
+      //sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
       sketch.image(sketch.deerImage, x + 3, y + 3, size / 2, size / 2);
     }
 
@@ -126,13 +126,18 @@ public class Cell {
       sketch.rectMode(PConstants.CENTER);
       sketch.fill(255, 0, 0 , 100);
       sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
-      sketch.image(sketch.wolfImage, x + 2 + (size / 2), y + 3, size / 2, size / 2);
+      //sketch.image(sketch.wolfImage, x + 2 + (size / 2), y + 3, size / 2, size / 2);
+      sketch.fill(0);
+
+      sketch.rect(x + (size / 2),y + (size / 2), size ,size );
+
     }
 
     if (debug) {
       sketch.fill(255);
       sketch.stroke(0, 255);
       sketch.textAlign(PConstants.RIGHT, PConstants.CENTER);
+      sketch.textSize(10);
       sketch.text("col: " + col + "\nrow: " + row, x + 3 * (size / 4f), y + 1.5f * size / 4f);
     }
 
