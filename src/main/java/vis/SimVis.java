@@ -32,10 +32,14 @@ public class SimVis extends PApplet {
         }
     }
 
-    int X = 40;
+    int X = 20;
     int Y = 20;
     int squareSize = 50;
     int background_color = 255;
+
+    int tickCounter = 0;
+
+    boolean debug = false;
 
     // TODO:: replace
     Random rng = new Random();
@@ -68,54 +72,58 @@ public class SimVis extends PApplet {
 
         // add "blank" game state
         stateQueue.add(new State(new int[X * Y]));
-
         // init cells
-        for (int j = 0; j < Y; j++) {
+        // row
+        for (int j = Y - 1; j >= 0 ; j--) {
+            //col
             for (int i = 0; i < X; i++) {
                 Cell cell = new Cell(this, i, j, squareSize);
                 cell.updateCellState(rng.nextInt(9));
                 cells.add(cell);
-
             }
         }
 
-
-        frameRate(50);
+        frameRate(30);
         background(background_color);
+
+
+
     }
 
     public void settings(){
-        size( squareSize * X, squareSize * Y);
+        size( squareSize * X, squareSize * Y + squareSize);
     }
 
-    @SneakyThrows
     public void draw(){
 
-        while (stateQueue.isEmpty()) {
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
-        background(255);
-        State state = stateQueue.poll();
-        List<Cell> predators = new ArrayList<>();
-        for (int i = 0; i < cells.size(); i++) {
-            Cell currentCell = cells.get(i);
-            int currentCellState = state.getState()[i];
-            if (currentCellState == 4 || currentCellState == 6 || currentCellState == 7 || currentCellState == 8) {
-                predators.add(currentCell);
+
+        if (!stateQueue.isEmpty()) {
+            System.out.println("Queue size: " + stateQueue.size());
+            background(255);
+            State state = stateQueue.poll();
+            List<Cell> predators = new ArrayList<>();
+            for (int i = 0; i < cells.size(); i++) {
+                Cell currentCell = cells.get(i);
+                int currentCellState = state.getState()[i];
+                if (currentCellState == 4 || currentCellState == 6 || currentCellState == 7 || currentCellState == 8) {
+                    predators.add(currentCell);
+                }
+                currentCell.updateCellState(state.getState()[i]);
             }
-            currentCell.updateCellState(state.getState()[i]);
-        }
-        for (Cell cell : cells) {
-            if (predators.contains(cell)) continue;
-            cell.show();
-        }
-        for (Cell cell : predators) {
-            cell.show();
+            for (Cell cell : cells) {
+                if (predators.contains(cell)) continue;
+                cell.show(debug);
+            }
+            for (Cell cell : predators) {
+                cell.show(debug);
+            }
+            tickCounter++;
+
+            fill(0);
+            stroke(255, 0, 0);
+            textSize(20);
+            text("tick: " + tickCounter, squareSize / 2, squareSize * Y + (squareSize / 2));
         }
 
     }

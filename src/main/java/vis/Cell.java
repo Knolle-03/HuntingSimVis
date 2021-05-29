@@ -13,6 +13,8 @@ public class Cell {
   int row;
   int size;
 
+  int maxRow = 20;
+
 //  PLAIN,                          // 0
 //  OBSTACLE,                       // 1
 //  TARGET,                         // 2
@@ -80,14 +82,11 @@ public class Cell {
     this.size = cell.size;
   }
 
-  public void show() {
+  public void show(boolean debug) {
+    int y = row * size + ((maxRow - 1) * size) - (2 * row * size);
     int x = col * size;
-    int y = row * size;
-   // System.out.println("Cell's x: " + x + "    Cells y: " + y);
     sketch.stroke(0);
     sketch.strokeWeight(4);
-
-
 
     // top
     sketch.line(x, y, x + size, y);
@@ -128,6 +127,13 @@ public class Cell {
       sketch.fill(255, 0, 0 , 100);
       sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
       sketch.image(sketch.wolfImage, x + 2 + (size / 2), y + 3, size / 2, size / 2);
+    }
+
+    if (debug) {
+      sketch.fill(255);
+      sketch.stroke(0, 255);
+      sketch.textAlign(PConstants.RIGHT, PConstants.CENTER);
+      sketch.text("col: " + col + "\nrow: " + row, x + 3 * (size / 4f), y + 1.5f * size / 4f);
     }
 
   }
