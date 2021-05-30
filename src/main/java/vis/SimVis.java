@@ -38,7 +38,7 @@ public class SimVis extends PApplet {
 
     int tickCounter = 0;
 
-    boolean debug = false;
+    boolean debug = true;
 
     // TODO:: replace
     Random rng = new Random();
