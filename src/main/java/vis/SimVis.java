@@ -23,22 +23,17 @@ public class SimVis extends PApplet {
     public ConnectionListener connectionListener;
     public ServerSocket serverSocket;
     public JSONConverter JSONConverter;
-    {
-        try {
-            serverSocket = new ServerSocket(5550);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    { try { serverSocket = new ServerSocket(5551); } catch (IOException e) {
+            e.printStackTrace(); } }
 
-    int X = 20;
-    public static int Y = 20;
-    int squareSize = 50;
+    int X = 50;
+    public static int Y = 50;
+    int squareSize = 25;
     int background_color = 255;
 
     int tickCounter = 0;
 
-    boolean debug = true;
+    boolean debug = false;
 
     // TODO:: replace
     Random rng = new Random();
@@ -80,9 +75,6 @@ public class SimVis extends PApplet {
 
         frameRate(30);
         background(background_color);
-
-
-
     }
 
     public void settings(){
@@ -97,6 +89,7 @@ public class SimVis extends PApplet {
             System.out.println("Queue size: " + stateQueue.size());
             background(255);
             State state = stateQueue.poll();
+            int len = state.getState().length;
             List<Cell> predators = new ArrayList<>();
             List<Cell> prey = new ArrayList<>();
             for (int i = 0; i < cells.size(); i++) {

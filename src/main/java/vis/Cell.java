@@ -111,9 +111,11 @@ public class Cell {
     if (hasPrey) {
       sketch.noStroke();
       sketch.rectMode(PConstants.CENTER);
-      sketch.fill(0, 0, 255 , 100);
-      //sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
-      sketch.image(sketch.deerImage, x + 3, y + 3, size / 2, size / 2);
+      sketch.fill(0, 0, 255, 100);
+      sketch.rect(x + (size / 2),y + (size / 2), size * 9,size * 9);
+      sketch.rectMode(PConstants.CORNER);
+      sketch.fill(0, 255, 0);
+      sketch.rect(x + 3, y + 3, size - 3, size - 3);
     }
 
     if (hasHighGrass) {
@@ -125,7 +127,7 @@ public class Cell {
       sketch.noStroke();
       sketch.rectMode(PConstants.CENTER);
       sketch.fill(255, 0, 0 , 100);
-      sketch.rect(x + (size / 2),y + (size / 2), size * 5,size * 5);
+      sketch.rect(x + (size / 2),y + (size / 2), size * 9,size * 9);
       //sketch.image(sketch.wolfImage, x + 2 + (size / 2), y + 3, size / 2, size / 2);
       sketch.fill(0);
 
