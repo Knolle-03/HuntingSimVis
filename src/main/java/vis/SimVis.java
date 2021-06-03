@@ -26,9 +26,9 @@ public class SimVis extends PApplet {
     { try { serverSocket = new ServerSocket(5551); } catch (IOException e) {
             e.printStackTrace(); } }
 
-    int X = 50;
-    public static int Y = 50;
-    int squareSize = 25;
+    int X = 20;
+    public static int Y = 20;
+    int squareSize = 50;
     int background_color = 255;
 
     int tickCounter = 0;
@@ -73,7 +73,7 @@ public class SimVis extends PApplet {
             }
         }
 
-        frameRate(30);
+        frameRate(50);
         background(background_color);
     }
 
